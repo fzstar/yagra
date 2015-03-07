@@ -13,6 +13,6 @@ if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
     print(header)
     head_params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册'}
     viewer.load('header', head_params)
-    params = {'welcome' : '你好'}
-    viewer.load('index', params)
+    params = {'site_url' : DOCUMENT_ROOT}
+    viewer.load('login', params)
 
