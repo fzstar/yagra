@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Yagra</title>
+<link href="bootstrap.min.css" rel="stylesheet" media="screen">
+<script src="static/jquery-1.10.2.js"></script>
+<script src="static/bootstrap.min.js"></script>
+<script src="static/application.js"></script>
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top mynav" role="navigation">
+    <div class="container" style="width: 1050px">
+		<ul class="nav navbar-nav">
+			<li><a class="navbar-brand"  href="#">标题</a></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li><a class="navbar-brand"  href="#">登录</a></li>
+			<li><a class="navbar-brand"  href="#">注册</a></li>
+	<div>
+</nav>
+<div class="container" style="margin-top:60px">
+	<div class="row">
+		<div class="col-xs-12" style="text-align:center">
+			<p>描述信息</p>
+		</div>
+		<div class="col-xs-3"></div>
+		<div class="col-xs-6" style="text-align:center">
+			<form action="http://localhost/lovermaker/user/register" method="post" accept-charset="utf-8" class="form-horizontal">	
+			<fieldset>				
+				<div class="form-group">
+					<label for="user_name" class="col-xs-3 control-label">用户名：</label> 
+					<div class="col-xs-6">
+					  <input type="text" name="user_name" class="form-control" value="" required>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					  <label for="passwd" class="col-xs-3 control-label">密码：</label>
+					<div class="col-xs-6">
+					  <input type="password" name="passwd" id="passwd" class="form-control" required>
+					</div>
+				</div>
+					
+				<div class="form-group">
+					  <label for="confirm_passwd" class="col-xs-3 control-label">确认密码：</label>
+					<div class="col-xs-6">
+					  <input type="password" name="confirm_passwd" class="form-control" id="confirm_passwd">
+					  <span class="help-block" id="span_confirm_passwd"></span>
+					</div>
+				</div>
+					
+				<div class="form-group">
+					<label for="email" class="col-xs-3 control-label">邮箱：</label> 
+					<div class="col-xs-6">
+					  <input type="text" name="email" class="email form-control" value="" required>
+					  <span class="help-block" id="span_email"></span>
+					</div>		
+				</div>
+				<input id="reg_submit" type="submit" class="btn btn-primary" name="submit" value="注册" />
+			</fieldset>
+			</form>		
+
+		</div>
+		
+		<div class="col-xs-3"></div>
+	</div>
+</div>
+</body>
+
+</html>
