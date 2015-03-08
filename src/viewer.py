@@ -7,7 +7,10 @@ class Viewer(object):
     HTML_ROOT = 'D:/Tools/xampp/cgi-bin/yagra/views'
     def load(self, view_name, params):
         def re_sub(m):
-            return params[m.group(1)]
+            if m.group(1) in params:
+                return params[m.group(1)]
+            else:
+                return ''
         html_str = self.__load_file(view_name)
         #for key in params.keys():
         #    html_str = html_str.replace('%' + key + '%', params[key])
