@@ -8,8 +8,10 @@ import hashlib
 
 import viewer
 import dbconnector
+import config
 
-DOCUMENT_ROOT = '/cgi-bin/yagra'
+SESSION_KEY = config.SESSION_KEY
+DOCUMENT_ROOT = config.DOCUMENT_ROOT
 header = 'Content-Type: text/html; charset=utf-8'
 viewer = viewer.Viewer()
 cookie = Cookie.SimpleCookie()
@@ -18,7 +20,8 @@ cookie = Cookie.SimpleCookie()
 print(header)
 res = 0;
 params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg.py', \
-          'login' : '登录', 'login_url' : 'login.py', 'welcome' : '你好'}
+          'login' : '登录', 'login_url' : 'login.py', 'welcome' : '你好',\
+          'img_path' : 'default.jpg'}
 
 if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
     res = -1
@@ -51,6 +54,9 @@ else:
                 params['reg_url'] = 'index.py'
                 params['login'] = '注销'
                 params['login_url'] = 'logout.py'
+                params['upload_btn'] = '''<a href="%s/src/upload.py" class="btn btn-info">上传头像</a>'''%DOCUMENT_ROOT
+                params['img_path'] = db.query('''select Path from users join avatars 
+                    on AvatarId = avatars.id where users.id = %s''', [rows[0]['id']])[0]['Path']
     except Exception, e:
         print '\n\n'
         print("database error", e)
@@ -60,9 +66,8 @@ else:
 
 print cookie
 print '\n'
+viewer.load('header', params)
 if res != 0:
-    viewer.load('header', params)
     viewer.load('login', params)
 else:
-    viewer.load('header', params)
     viewer.load('index', params)

@@ -1,15 +1,15 @@
 #!C:\Program Files\Python27\python.exe
 # coding=utf-8
 
-MYSQL_HOST = 'localhost'
-MYSQL_USER = 'root'
-MYSQL_PWD = ''
+DB_HOST = 'localhost'
+DB_USER = 'root'
+DB_PASSWD = ''
 
-SESSION_KEY = 'key_yagra'
+SESSION_KEY = 'yagra_fzs'
 ''' session hash key '''
 
-TEMPLATE_PATH = '/var/www/html/templates'
-
-HOST_NAME = 'cenhao.chinacloudapp.cn'
+DOCUMENT_ROOT = '/cgi-bin/yagra'
+HTML_ROOT = 'D:/Tools/xampp/cgi-bin/yagra/views'
+UPLOAD_FILE_PATH = 'D:/Tools/xampp/cgi-bin/yagra/img'
 
 MAX_IMAGE_SIZE = 1 * 1024 * 1024 # 1 MB

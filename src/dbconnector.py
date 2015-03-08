@@ -5,11 +5,12 @@ import hashlib
 import time
 import datetime
 import MySQLdb as mysql
+import config
 
 class DbConnector(object):
-    DB_USER = 'root'
-    DB_PASSWD = ''
-    DB_HOST = 'localhost'
+    DB_USER = config.DB_USER
+    DB_PASSWD = config.DB_PASSWD
+    DB_HOST = config.DB_HOST
     conn = None
     cursor = None
     

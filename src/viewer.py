@@ -2,12 +2,17 @@
 # coding=utf-8
 
 import re
+import config
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 class Viewer(object):
-    HTML_ROOT = 'D:/Tools/xampp/cgi-bin/yagra/views'
+    HTML_ROOT = config.HTML_ROOT
     def load(self, view_name, params):
         def re_sub(m):
-            if m.group(1) in params:
+            if m.group(1) in params.keys():
                 return params[m.group(1)]
             else:
                 return ''
@@ -23,7 +28,7 @@ class Viewer(object):
             html = open(self.HTML_ROOT + '/' + file_name+'.html')
             return html.read()
         except IOError, e:
-            print('Read View File Error. '+e)
+            print('Read View File Error.', e)
             return ''
         
 if __name__ == '__main__':
