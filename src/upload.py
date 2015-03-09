@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#!/usr/bin/python
+# coding=utf-8
 
 import cgi
 import os
@@ -90,7 +90,7 @@ finally:
 print '\n'
 viewer.load('header', params)
 if res == 0:
-    print '<meta http-equiv="refresh" content="0;url=http://localhost/cgi-bin/yagra/src/upload.py">'
+    viewer.set_redirect('upload.py')
     viewer.load('upload', params)
 elif res == 1:
     viewer.load('index', params)

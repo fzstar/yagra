@@ -73,5 +73,5 @@ viewer.load('header', params)
 if res != 0:
     viewer.load('login', params)
 else:
-    print '<meta http-equiv="refresh" content="0;url=http://localhost/cgi-bin/yagra/src/index.py">'
+    viewer.set_redirect('index.py')
     viewer.load('index', params) 
