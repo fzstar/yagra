@@ -8,6 +8,8 @@ import hashlib
 
 import viewer
 import config
+import cgitb
+cgitb.enable()
 
 SESSION_KEY = config.SESSION_KEY
 DOCUMENT_ROOT = config.DOCUMENT_ROOT

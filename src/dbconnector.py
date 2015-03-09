@@ -20,11 +20,12 @@ class DbConnector(object):
 
     def execute(self, sql, params):
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
-        ret = self.cursor.execute(sql,params)
+        self.cursor.execute(sql,params)
+        ret = self.conn.insert_id()
         self.conn.commit()
         if self.cursor != None:
             self.cursor.close()
-        return ret
+        return int(ret)
     
     def query(self, sql, params):
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)

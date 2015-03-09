@@ -8,6 +8,8 @@ import Cookie
 import dbconnector
 import config
 import session
+import cgitb
+cgitb.enable()
 
 DOCUMENT_ROOT = config.DOCUMENT_ROOT
 header = 'Content-Type: text/html; charset=utf-8\n\n'
@@ -28,10 +30,12 @@ if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
             params['login'] = '注销'
             params['login_url'] = 'logout.py'
             params['upload_btn'] = '''<a href="%s/src/upload.py" class="btn btn-info">上传头像</a>'''%DOCUMENT_ROOT
-            params['img_path'] = db.query('''select Path from users join avatars 
-                on AvatarId = avatars.id where users.id = %s''', [session['user_id'].value])[0]['Path']
+            rows = db.query('''select FileName,Token from users join avatars 
+                on AvatarId = avatars.id where users.id = %s''', [session['user_id'].value])
+            params['img_path'] = rows[0]['FileName']
+            params['token_str'] = '您的api token为%s<br>访问url：yagra/src/api.py?token=%s即可使用' % (rows[0]['Token'], rows[0]['Token'] )
     except Exception, e:
-        print ("Error", e)
+        os.stderr.write("Error", e)
     finally:
         db.close()
     

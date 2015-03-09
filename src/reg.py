@@ -12,6 +12,8 @@ import Cookie
 import viewer
 import dbconnector
 import config
+import cgitb
+cgitb.enable()
 
 SESSION_KEY = config.SESSION_KEY
 DOCUMENT_ROOT = config.DOCUMENT_ROOT
@@ -53,10 +55,11 @@ else:
                 res = -3
                 params['reg_msg'] = '用户名已存在'
             else:    
-                sql = "insert into users(UserName,Password,Salt,SessionId) values (%s,%s,%s,%s)"
+                sql = "insert into users(UserName,Password,Salt,SessionId,Token) values (%s,%s,%s,%s,%s)"
                 salt_res = get_salt(passwd)
                 sid = get_session_id(username)
-                sql_params = [username, salt_res[0], salt_res[1], sid]
+                token = hashlib.md5(username).hexdigest()
+                sql_params = [username, salt_res[0], salt_res[1], sid, token]
                 user_id = db.execute(sql, sql_params)
                 cookie['session'] = sid
                 cookie['session']['expires'] = 30 * 60
@@ -68,10 +71,10 @@ else:
                 params['reg_url'] = 'index.py'
                 params['login'] = '注销'
                 params['login_url'] = 'logout.py'
+                params['token_str'] = '您的api token为%s，访问url：yagra/api.py?tokne=%s即可使用' % (token, token)
                 params['upload_btn'] = '''<a href="%s/src/upload.py" class="btn btn-info">上传头像</a>'''%DOCUMENT_ROOT
         except Exception, e:
-            print '\n\n'
-            print("database error", e)
+            os.stderr.write("database error", e)
         finally:
             db.close()
 
@@ -81,4 +84,5 @@ viewer.load('header', params)
 if res != 0:
     viewer.load('reg', params)
 else:
+    print '<meta http-equiv="refresh" content="0;url=http://localhost/cgi-bin/yagra/src/index.py">'
     viewer.load('index', params)

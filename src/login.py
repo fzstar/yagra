@@ -9,6 +9,8 @@ import hashlib
 import viewer
 import dbconnector
 import config
+import cgitb
+cgitb.enable()
 
 SESSION_KEY = config.SESSION_KEY
 DOCUMENT_ROOT = config.DOCUMENT_ROOT
@@ -55,11 +57,11 @@ else:
                 params['login'] = '注销'
                 params['login_url'] = 'logout.py'
                 params['upload_btn'] = '''<a href="%s/src/upload.py" class="btn btn-info">上传头像</a>'''%DOCUMENT_ROOT
-                params['img_path'] = db.query('''select Path from users join avatars 
-                    on AvatarId = avatars.id where users.id = %s''', [rows[0]['id']])[0]['Path']
+                params['token_str'] = '您的api token为%s<br>访问url：yagra/src/api.py?token=%s即可使用' % (rows[0]['Token'], rows[0]['Token'] )
+                params['img_path'] = db.query('''select FileName from users join avatars 
+                    on AvatarId = avatars.id where users.id = %s''', [rows[0]['id']])[0]['FileName']
     except Exception, e:
-        print '\n\n'
-        print("database error", e)
+        os.stderr.write("database error", e)
     finally:
         db.close()
     
@@ -70,4 +72,5 @@ viewer.load('header', params)
 if res != 0:
     viewer.load('login', params)
 else:
-    viewer.load('index', params)
+    print '<meta http-equiv="refresh" content="0;url=http://localhost/cgi-bin/yagra/src/index.py">'
+    viewer.load('index', params) 
