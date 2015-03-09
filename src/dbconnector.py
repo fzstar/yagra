@@ -1,4 +1,4 @@
-#!C:\Program Files\Python27\python.exe
+#!/usr/bin/python
 # coding=utf-8
 
 import hashlib
@@ -15,9 +15,8 @@ class DbConnector(object):
     cursor = None
     
     def __init__(self):
-        self.conn = mysql.connect(host=self.DB_HOST,user=self.DB_USER,passwd=self.DB_PASSWD,\
-                             db="yagra",charset="utf8")
-
+        self.conn = mysql.connect(host=self.DB_HOST, user=self.DB_USER, passwd=self.DB_PASSWD,\
+                             db="yagra", charset="utf8", unix_socket='/opt/lampp/var/mysql/mysql.sock')
     def execute(self, sql, params):
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
         self.cursor.execute(sql,params)

@@ -1,8 +1,9 @@
-#!C:\Program Files\Python27\python.exe
-#!coding=utf-8
+#!/usr/bin/python
+#!/usr/bin/python
 
 import cgi
 import os
+import sys
 import hashlib
 import time
 
@@ -81,7 +82,7 @@ try:
             else:         
                 params['upload_msg'] = res_msg[filename]
 except Exception, e:
-    os.stderr.write("database error", e)
+    print("error", e)
 finally:
     db.close()
     
