@@ -8,6 +8,7 @@ import hashlib
 import hmac
 import time
 import Cookie
+import json
 
 import viewer
 import dbconnector
@@ -20,6 +21,7 @@ DOCUMENT_ROOT = config.DOCUMENT_ROOT
 header = 'Content-Type: text/html; charset=utf-8'
 viewer = viewer.Viewer()
 cookie = Cookie.SimpleCookie()
+response = dict()
 
 def get_salt(passwd):
     salt = hashlib.md5(str(time.time())).hexdigest()
@@ -33,13 +35,13 @@ def get_session_id(username):
     return hmac.new(SESSION_KEY, username).hexdigest()
 
 print(header)
-res = 0;
-params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg.py', \
-          'login' : '登录', 'login_url' : 'login.py', 'welcome' : '你好',\
+res = 0
+params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg', \
+          'login' : '登录', 'login_url' : 'login', 'welcome' : '你好',\
           'img_path' : 'default.jpg'}
 
 if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
-    res = -1
+    res = 1
 else:
     form = cgi.FieldStorage()
     username = form.getfirst('user_name')
@@ -47,13 +49,15 @@ else:
     confirm_passwd = form.getfirst('confirm_passwd')
     if passwd != confirm_passwd:
         res = -2
-        params['reg_msg'] = '两次输入的密码不一致'
+        #params['reg_msg'] = '两次输入的密码不一致'
+        response['msg'] = '两次输入的密码不一致'
     else:    
         db = dbconnector.DbConnector()
         try:
             if (db.count("select count(*) from users where UserName=%s", [username]) > 0):
                 res = -3
-                params['reg_msg'] = '用户名已存在'
+                #params['reg_msg'] = '用户名已存在'
+                response['msg'] = '用户名已存在'
             else:    
                 sql = "insert into users(UserName,Password,Salt,SessionId,Token) values (%s,%s,%s,%s,%s)"
                 salt_res = get_salt(passwd)
@@ -66,23 +70,27 @@ else:
                 cookie['user_name'] = username
                 cookie['user_id'] = user_id
                 
-                params['welcome'] = '注册成功，你好 '+username
-                params['reg'] = username
-                params['reg_url'] = 'index.py'
-                params['login'] = '注销'
-                params['login_url'] = 'logout.py'
-                params['token_str'] = '您的api token为%s，访问url：yagra/api.py?tokne=%s即可使用' % (token, token)
-                params['upload_btn'] = '''<a href="%s/src/upload.py" class="btn btn-info">上传头像</a>'''%DOCUMENT_ROOT
-        except Exception, e:
+                #params['welcome'] = '注册成功，你好 '+username
+                #params['reg'] = username
+                #params['reg_url'] = 'index.py'
+                #params['login'] = '注销'
+                #params['login_url'] = 'logout.py'
+                #params['token_str'] = '您的api token为%s，访问url：yagra/api.py?tokne=%s即可使用' % (token, token)
+                #params['upload_btn'] = '''<a href="%s/src/upload.py" class="btn btn-info">上传头像</a>'''%DOCUMENT_ROOT
+        except Exception as e:
             print("error", e)
         finally:
             db.close()
 
-print cookie
+print(cookie.output())
 print '\n'
-viewer.load('header', params)
-if res != 0:
+#viewer.load('header', params)
+response['code'] = res
+if res == 1:
+    viewer.load('header', params)
     viewer.load('reg', params)
 else:
-    viewer.set_redirect('index.py')
-    viewer.load('index', params)
+    print(json.dumps(response))
+#else:
+    #viewer.set_redirect('index.py')
+    #viewer.load('index', params)

@@ -29,7 +29,7 @@ if token != None:
     if len(rows) == 1:
         file_name = rows[0]['FileName']
         file_type = file_name.split('.')[-1]
-        header = 'Content-Type: image/%s;\n' % file_type
+        header = 'Content-Type: image/%s;\nCache-Control: max-age=300\n' % file_type
         file = open(UPLOAD_FILE_PATH+'/'+file_name, 'rb')
         file_data = file.read()
         file.close()
@@ -37,7 +37,7 @@ if token != None:
         print file_data
         exit(0)
 
-header = 'Content-Type: text/html; charset=utf-8\n\n'
+header = 'Content-Type: text/html; charset=utf-8;\n\n'
 print header
 print 'token无效'
-        
+       

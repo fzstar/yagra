@@ -11,12 +11,13 @@ class DbConnector(object):
     DB_USER = config.DB_USER
     DB_PASSWD = config.DB_PASSWD
     DB_HOST = config.DB_HOST
+    DB_SOCKET = config.DB_SOCKET
     conn = None
     cursor = None
     
     def __init__(self):
         self.conn = mysql.connect(host=self.DB_HOST, user=self.DB_USER, passwd=self.DB_PASSWD,\
-                             db="yagra", charset="utf8", unix_socket='/opt/lampp/var/mysql/mysql.sock')
+                             db="yagra", charset="utf8", unix_socket=self.DB_SOCKET)
     def execute(self, sql, params):
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
         self.cursor.execute(sql,params)
