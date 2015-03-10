@@ -1,4 +1,4 @@
-#!C:\Program Files\Python27\python.exe
+#!/usr/bin/python
 # coding=utf-8
 
 import cgi
@@ -18,8 +18,8 @@ viewer = viewer.Viewer()
 cookie = Cookie.SimpleCookie()
     
 print(header)
-params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg.py', \
-          'login' : '登录', 'login_url' : 'login.py', 'welcome' : '你好',\
+params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg', \
+          'login' : '登录', 'login_url' : 'login', 'welcome' : '你好',\
           'img_path' : 'default.jpg'}
 
 cookie['session'] = ''

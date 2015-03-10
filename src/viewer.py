@@ -1,4 +1,4 @@
-#!C:\Program Files\Python27\python.exe
+#!/usr/bin/python
 # coding=utf-8
 
 import re
@@ -10,6 +10,7 @@ sys.setdefaultencoding('utf8')
 
 class Viewer(object):
     HTML_ROOT = config.HTML_ROOT
+    HOST_NAME = config.HOST_NAME
     def load(self, view_name, params):
         def re_sub(m):
             if m.group(1) in params.keys():
@@ -31,6 +32,9 @@ class Viewer(object):
             print('Read View File Error.', e)
             return ''
         
+    def set_redirect(self, url, time=0):
+	print '<meta http-equiv="refresh" content="%d;url=http://%s/yagra/src/%s">' % (time, self.HOST_NAME, url)
+
 if __name__ == '__main__':
     params = {'site_url' : '/cgi-bin/yagra', 'reg' : '注册'}
     viewer = Viewer()

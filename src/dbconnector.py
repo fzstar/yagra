@@ -1,4 +1,4 @@
-#!C:\Program Files\Python27\python.exe
+#!/usr/bin/python
 # coding=utf-8
 
 import hashlib
@@ -11,14 +11,16 @@ class DbConnector(object):
     DB_USER = config.DB_USER
     DB_PASSWD = config.DB_PASSWD
     DB_HOST = config.DB_HOST
+    DB_SOCKET = config.DB_SOCKET
     conn = None
     cursor = None
     
     def __init__(self):
-        self.conn = mysql.connect(host=self.DB_HOST,user=self.DB_USER,passwd=self.DB_PASSWD,\
-                             db="yagra",charset="utf8")
-
+        self.conn = mysql.connect(host=self.DB_HOST, user=self.DB_USER, passwd=self.DB_PASSWD,\
+                             db="yagra", charset="utf8", unix_socket=self.DB_SOCKET)
     def execute(self, sql, params):
+        for item in params:
+            item = mysql.escape_string(item)
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
         self.cursor.execute(sql,params)
         ret = self.conn.insert_id()
@@ -28,6 +30,8 @@ class DbConnector(object):
         return int(ret)
     
     def query(self, sql, params):
+        for item in params:
+            item = mysql.escape_string(item)
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
         self.cursor.execute(sql,params)
         ret = self.cursor.fetchall()
@@ -36,6 +40,8 @@ class DbConnector(object):
         return ret
 
     def count(self, sql, params):
+        for item in params:
+            item = mysql.escape_string(item)
         self.cursor = self.conn.cursor()
         self.cursor.execute(sql,params)
         ret = self.cursor.fetchone()[0]

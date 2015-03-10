@@ -1,10 +1,12 @@
-#!C:\Program Files\Python27\python.exe
-#!coding=utf-8
+#!/usr/bin/python
+# coding=utf-8
 
 import cgi
 import os
+import sys
 import hashlib
 import time
+import json
 
 import viewer
 import dbconnector
@@ -19,6 +21,8 @@ MAXBYTES = config.MAX_IMAGE_SIZE
 UPLOAD_FILE_PATH = config.UPLOAD_FILE_PATH
 header = 'Content-Type: text/html; charset=utf-8'
 viewer = viewer.Viewer()
+response = dict()
+res_msg = {-1 : '文件类型不正确', -2 : '文件大小超过上限', -3 : '上传失败'}
     
 try: # Windows needs stdio set for binary mode.  
     import msvcrt  
@@ -27,14 +31,13 @@ try: # Windows needs stdio set for binary mode.
 except ImportError:  
     pass  
     
-res_msg = {-1 : '文件类型不正确', -2 : '文件大小超过上限', -3 : '上传失败'}
     
 def save_file(image, username):
     if not (image.filename and image.file):
         return -3
     filename = str(int(time.time()*1000))   #字符串形式的当前时间戳
     upfile = image.file
-    extension = image.filename.split(".")[-1]
+    extension = image.filename.split(".")[-1].lower()
     if extension not in ['jpg', 'png']:
         return -1
     filename = username + "_" + filename + "." + extension    #文件名为 用户名_时间戳.扩展名
@@ -47,7 +50,7 @@ def save_file(image, username):
     return filename
 
 print(header)
-res = -1; 
+res = 2; 
 params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg.py', \
           'login' : '登录', 'login_url' : 'login.py', 'welcome' : '你好',\
           'img_path' : 'default.jpg'}
@@ -70,28 +73,27 @@ try:
             filename = save_file(image, session['user_name'].value)
             if type(filename) != int:  
                 res = 0
-                params['upload_msg'] = '上传成功'
                 sql = 'insert into avatars(UserId, FileName) values (%s,%s)'
                 sql_params = [session['user_id'].value, filename]
                 avatar_id = db.execute(sql, sql_params)
                 sql = 'update users set AvatarId = %s where id = %s'
                 sql_params = [avatar_id, session['user_id'].value]
                 db.execute(sql, sql_params)
-                params['img_path'] = filename
-            else:         
-                params['upload_msg'] = res_msg[filename]
+            else:     
+                res = filename
+                response['msg'] = res_msg[filename]
 except Exception, e:
-    print("database error", e)
+    print("error", e)
 finally:
     db.close()
-    
 
 print '\n'
-viewer.load('header', params)
-if res == 0:
-    print '<meta http-equiv="refresh" content="0;url=http://localhost/cgi-bin/yagra/src/upload.py">'
-    viewer.load('upload', params)
-elif res == 1:
+response['code'] = res
+if res == 1:
+    viewer.load('header', params)
     viewer.load('index', params)
-else:
+elif res == 2:
+    viewer.load('header', params)
     viewer.load('upload', params)
+else:
+    print json.dumps(response)
