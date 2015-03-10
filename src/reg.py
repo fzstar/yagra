@@ -44,7 +44,7 @@ if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
     res = 1
 else:
     form = cgi.FieldStorage()
-    username = form.getfirst('user_name')
+    username = cgi.escape(form.getfirst('user_name'))
     passwd = form.getfirst('passwd')
     confirm_passwd = form.getfirst('confirm_passwd')
     if passwd != confirm_passwd:

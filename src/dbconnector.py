@@ -19,6 +19,8 @@ class DbConnector(object):
         self.conn = mysql.connect(host=self.DB_HOST, user=self.DB_USER, passwd=self.DB_PASSWD,\
                              db="yagra", charset="utf8", unix_socket=self.DB_SOCKET)
     def execute(self, sql, params):
+        for item in params:
+            item = mysql.escape_string(item)
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
         self.cursor.execute(sql,params)
         ret = self.conn.insert_id()
@@ -28,6 +30,8 @@ class DbConnector(object):
         return int(ret)
     
     def query(self, sql, params):
+        for item in params:
+            item = mysql.escape_string(item)
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
         self.cursor.execute(sql,params)
         ret = self.cursor.fetchall()
@@ -36,6 +40,8 @@ class DbConnector(object):
         return ret
 
     def count(self, sql, params):
+        for item in params:
+            item = mysql.escape_string(item)
         self.cursor = self.conn.cursor()
         self.cursor.execute(sql,params)
         ret = self.cursor.fetchone()[0]
