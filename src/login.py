@@ -61,7 +61,7 @@ else:
                 params['img_path'] = db.query('''select FileName from users join avatars 
                     on AvatarId = avatars.id where users.id = %s''', [rows[0]['id']])[0]['FileName']
     except Exception, e:
-        os.stderr.write("database error", e)
+        print("database error", e)
     finally:
         db.close()
     

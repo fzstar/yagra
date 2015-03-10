@@ -81,7 +81,7 @@ try:
             else:         
                 params['upload_msg'] = res_msg[filename]
 except Exception, e:
-    os.stderr.write("database error", e)
+    print("database error", e)
 finally:
     db.close()
     

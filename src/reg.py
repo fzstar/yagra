@@ -74,7 +74,7 @@ else:
                 params['token_str'] = '您的api token为%s，访问url：yagra/api.py?tokne=%s即可使用' % (token, token)
                 params['upload_btn'] = '''<a href="%s/src/upload.py" class="btn btn-info">上传头像</a>'''%DOCUMENT_ROOT
         except Exception, e:
-            os.stderr.write("database error", e)
+            print("database error", e)
         finally:
             db.close()
 

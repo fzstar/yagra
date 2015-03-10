@@ -35,7 +35,7 @@ if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
             params['img_path'] = rows[0]['FileName']
             params['token_str'] = '您的api token为%s<br>访问url：yagra/src/api.py?token=%s即可使用' % (rows[0]['Token'], rows[0]['Token'] )
     except Exception, e:
-        os.stderr.write("Error", e)
+        print("Error", e)
     finally:
         db.close()
     
