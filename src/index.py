@@ -30,7 +30,7 @@ if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
             params['reg_url'] = 'index'
             params['login'] = '注销'
             params['login_url'] = 'logout'
-            params['upload_btn'] = '''<a href="%s/upload" class="btn btn-info">上传头像</a>'''%DOCUMENT_ROOT
+            params['upload_btn'] = '''<a href="%s/upload" class="btn btn-info">头像设置</a>'''%DOCUMENT_ROOT
             rows = db.query('''select FileName,Token from users join avatars 
                 on AvatarId = avatars.id where users.id = %s''', [session['user_id'].value])
             params['img_path'] = rows[0]['FileName']

@@ -59,6 +59,8 @@ try:
         res = 1
         params['welcome'] = '请先登录'
     else:
+        save_imgs = db.query('select * from avatars where UserId = %s', [session['user_id'].value])
+        params['save_imgs'] = viewer.load_save_imgs(save_imgs)
         params['reg'] = session['user_name'].value
         params['reg_url'] = 'index'
         params['login'] = '注销'

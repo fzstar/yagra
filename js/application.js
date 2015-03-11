@@ -1,4 +1,16 @@
 $(function(){
+    $('.save-img').click(function(e){
+	var imgId = $(this).attr('img-id')
+        $.post('/modifyimg', {img_id:imgId }, function(ret) {
+            if (ret.code == 0){
+                alert(ret.msg);
+                window.location.href = '/upload';
+            }
+            else
+                alert(ret.msg);
+        }, 'json');
+    });
+
     $('#reg_submit').click(function(e){
         e.preventDefault();
         var form = $(this).parents('form'); 
