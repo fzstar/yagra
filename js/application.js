@@ -1,8 +1,13 @@
 $(function(){
     $('#reg_submit').click(function(e){
         e.preventDefault();
-        var form = $(this).parents('form');
-        $.post('/reg', form.serialize(), function(ret) {
+        var form = $(this).parents('form'); 
+        var userName = form.find('input[name="user_name"]').val()
+        var passwdInput = form.find('input[name="passwd"]');
+        var saltPasswd = hex_md5(passwdInput.val()+userName);
+        var confirmPasswdInput = form.find('input[name="confirm_passwd"]');
+        var confirmSaltPasswd = hex_md5(confirmPasswdInput.val()+userName);
+        $.post('/reg', {user_name:userName,passwd:saltPasswd,confirm_passwd:confirmSaltPasswd }, function(ret) {
             if (ret.code == 0){
                 alert('注册成功');
                 window.location.href = '/index';
@@ -34,13 +39,19 @@ $(function(){
     $('#login_submit').click(function(e){
         e.preventDefault();
         var form = $(this).parents('form');
-        $.post('/login', form.serialize(), function(ret) {
-            if (ret.code == 0) {
-                alert('登录成功');
-                window.location.href = '/index';
-            }
-            else
-                alert(ret.msg);
+        var userName = form.find('input[name="user_name"]').val()
+        $.post('/logintoken', {user_name:userName}, function(ret) {
+            var token = ret.token;
+            var passwdInput = form.find('input[name="passwd"]');
+            var tokenPasswd = hex_md5(hex_md5(passwdInput.val()+userName)+token);
+            $.post('/login', {user_name:userName,passwd:tokenPasswd}, function(ret) {
+                if (ret.code == 0) {
+                    alert('登录成功');
+                    window.location.href = '/index';
+                }
+                else
+                    alert(ret.msg);
+            }, 'json');
         }, 'json');
     });
 });

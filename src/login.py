@@ -5,9 +5,9 @@ import cgi
 import os
 import sys
 import Cookie
-import hashlib
 import json
 
+from hashutil import HashUtil
 import viewer
 import dbconnector
 import config
@@ -32,20 +32,18 @@ if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
 else:    
     form = cgi.FieldStorage()
     username = cgi.escape(form.getfirst('user_name'))
-    passwd = form.getfirst('password')
+    token_passwd = form.getfirst('passwd')
     
     db = dbconnector.DbConnector()
     try:
         rows = db.query("select * from users where UserName=%s", [username])
+        db.execute("update users set LoginToken='' where UserName=%s", [username])
         if len(rows) == 0 or len(rows) > 1:
             res = -2
             response['msg'] = '该用户不存在'
         else:    
-            md5 = hashlib.md5()
-            md5.update(passwd)
-            md5.update(rows[0]['Salt'])
-            hash_passwd = md5.hexdigest()
-            if hash_passwd != rows[0]['Password']:
+            save_token_passwd = HashUtil.get_md5(rows[0]['Password'],rows[0]['LoginToken'])
+            if token_passwd != save_token_passwd:
                 res = -3
                 response['msg'] = '密码错误'
             else:

@@ -4,7 +4,6 @@
 import cgi
 import os
 import sys
-import hashlib
 import time
 import json
 
@@ -15,7 +14,6 @@ import session
 import cgitb
 cgitb.enable()
 
-SESSION_KEY = config.SESSION_KEY
 DOCUMENT_ROOT = config.DOCUMENT_ROOT
 MAXBYTES = config.MAX_IMAGE_SIZE
 UPLOAD_FILE_PATH = config.UPLOAD_FILE_PATH
@@ -51,8 +49,8 @@ def save_file(image, username):
 
 print(header)
 res = 2; 
-params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg.py', \
-          'login' : '登录', 'login_url' : 'login.py', 'welcome' : '你好',\
+params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg', \
+          'login' : '登录', 'login_url' : 'login', 'welcome' : '你好',\
           'img_path' : 'default.jpg'}
 db = dbconnector.DbConnector()
 try:
@@ -62,9 +60,9 @@ try:
         params['welcome'] = '请先登录'
     else:
         params['reg'] = session['user_name'].value
-        params['reg_url'] = 'index.py'
+        params['reg_url'] = 'index'
         params['login'] = '注销'
-        params['login_url'] = 'logout.py'
+        params['login_url'] = 'logout'
         params['img_path'] = db.query('''select FileName from users join avatars 
               on AvatarId = avatars.id where users.id = %s''', [session['user_id'].value])[0]['FileName']
         if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'POST'):

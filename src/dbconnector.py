@@ -20,7 +20,8 @@ class DbConnector(object):
                              db="yagra", charset="utf8", unix_socket=self.DB_SOCKET)
     def execute(self, sql, params):
         for item in params:
-            item = mysql.escape_string(item)
+            if type(item) == str:
+                item = mysql.escape_string(item)
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
         self.cursor.execute(sql,params)
         ret = self.conn.insert_id()
@@ -31,7 +32,8 @@ class DbConnector(object):
     
     def query(self, sql, params):
         for item in params:
-            item = mysql.escape_string(item)
+            if type(item) == str:
+                item = mysql.escape_string(item)
         self.cursor = self.conn.cursor(cursorclass = mysql.cursors.DictCursor)
         self.cursor.execute(sql,params)
         ret = self.cursor.fetchall()
@@ -41,7 +43,8 @@ class DbConnector(object):
 
     def count(self, sql, params):
         for item in params:
-            item = mysql.escape_string(item)
+            if type(item) == str:
+                item = mysql.escape_string(item)
         self.cursor = self.conn.cursor()
         self.cursor.execute(sql,params)
         ret = self.cursor.fetchone()[0]
@@ -65,7 +68,7 @@ if __name__ == '__main__':
     params = ["user1", hash_passwd, salt]
     
     try:
-        print db.query("select * from users where UserName=%s", "user4")
+        print db.query("select * from users where id=%s", [7])
     except Exception, e:
         print("database error", e)
     finally:
