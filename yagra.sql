@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `avatars`;
 CREATE TABLE `avatars` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `UserId` int(10) unsigned NOT NULL DEFAULT '0',
-  `FileName` varchar(45) CHARACTER SET latin1 NOT NULL,
+  `FileName` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -77,4 +77,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-14 21:43:22
+-- Dump completed on 2015-03-15 16:56:49
