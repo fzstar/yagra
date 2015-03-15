@@ -36,8 +36,7 @@ if token is not None:
         file_data = file.read()
         file.close()
 
-        header = 'Content-Type: image/%s;\nCache-Control: max-age=300\n' 
-                  % file_type
+        header = 'Content-Type: image/%s;\nCache-Control: max-age=300\n' % file_type
         print header
         print file_data
         db.close()

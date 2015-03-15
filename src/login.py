@@ -21,7 +21,7 @@ response = dict()
 
 res = 0
 params = {'site_url': DOCUMENT_ROOT, 'reg': '注册', 'reg_url': 'reg',
-          'login': '登录', 'login_url'  'login', 'welcome': '你好',
+          'login': '登录', 'login_url': 'login', 'welcome': '你好',
           'img_path': 'default.jpg'}
 
 if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
