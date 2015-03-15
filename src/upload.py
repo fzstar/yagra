@@ -5,8 +5,6 @@ import cgi
 import os
 import sys
 import time
-import json
-
 import viewer
 import dbconnector
 import config
@@ -16,8 +14,7 @@ cgitb.enable()
 
 DOCUMENT_ROOT = config.DOCUMENT_ROOT
 MAXBYTES = config.MAX_IMAGE_SIZE
-UPLOAD_FILE_PATH = config.UPLOAD_FILE_PATH
-header = 'Content-Type: text/html; charset=utf-8'
+UPLOAD_FILE_PATH = config.APP_ROOT+'/img/'
 viewer = viewer.Viewer()
 response = dict()
 res_msg = {-1 : '文件类型不正确', -2 : '文件大小超过上限', -3 : '上传失败'}
@@ -42,12 +39,11 @@ def save_file(image, username):
     file_data = upfile.read(MAXBYTES+10)
     if len(file_data) > MAXBYTES:
         return -2
-    save_file = open(UPLOAD_FILE_PATH+"/"+filename,'w+b')
+    save_file = open(UPLOAD_FILE_PATH+filename,'w+b')
     save_file.write(file_data)
     save_file.close()
     return filename
 
-print(header)
 res = 2; 
 params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg', \
           'login' : '登录', 'login_url' : 'login', 'welcome' : '你好',\
@@ -87,13 +83,14 @@ except Exception, e:
 finally:
     db.close()
 
-print '\n'
 response['code'] = res
 if res == 1:
-    viewer.load('header', params)
-    viewer.load('index', params)
+    viewer.add_view('header', params)
+    viewer.add_view('index', params)
+    viewer.output()
 elif res == 2:
-    viewer.load('header', params)
-    viewer.load('upload', params)
+    viewer.add_view('header', params)
+    viewer.add_view('upload', params)
+    viewer.output()
 else:
-    print json.dumps(response)
+    viewer.output(response)

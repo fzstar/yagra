@@ -16,13 +16,10 @@ cgitb.enable()
 
 SESSION_KEY = config.SESSION_KEY
 DOCUMENT_ROOT = config.DOCUMENT_ROOT
-header = 'Content-Type: text/html; charset=utf-8'
 viewer = viewer.Viewer()
 cookie = Cookie.SimpleCookie()
 response = dict()
 
-
-print(header)
 res = 0
 params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg', \
           'login' : '登录', 'login_url' : 'login', 'welcome' : '你好',\
@@ -60,15 +57,12 @@ else:
         finally:
             db.close()
 
-print(cookie.output())
-print '\n'
-#viewer.load('header', params)
+viewer.set_cookie(cookie)
 response['code'] = res
 if res == 1:
-    viewer.load('header', params)
-    viewer.load('reg', params)
+    viewer.add_view('header', params)
+    viewer.add_view('reg', params)
+    viewer.output()
 else:
-    print(json.dumps(response))
-#else:
-    #viewer.set_redirect('index.py')
-    #viewer.load('index', params)
+    viewer.output(response)
+

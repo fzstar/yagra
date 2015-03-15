@@ -3,6 +3,7 @@
 
 import re
 import config
+import json
 
 import sys
 reload(sys)
@@ -10,8 +11,20 @@ sys.setdefaultencoding('utf8')
 
 class Viewer(object):
     DOCUMENT_ROOT = config.DOCUMENT_ROOT
-    HTML_ROOT = config.HTML_ROOT
+    HTML_ROOT = config.APP_ROOT+'/views/'
     HOST_NAME = config.HOST_NAME
+    cookie = None
+    header = 'Content-Type: text/html; charset=utf-8;'
+    params = {}
+    views = []
+
+    def set_cookie(self, cookie):
+        self.cookie = cookie
+    
+    def add_view(self, view_name, params):
+        self.views.append(view_name)
+        self.params.update(params)
+    
     def load(self, view_name, params):
         def re_sub(m):
             if m.group(1) in params.keys():
@@ -25,7 +38,7 @@ class Viewer(object):
     
     def __load_file(self, file_name):
         try:
-            html = open(self.HTML_ROOT + '/' + file_name+'.html')
+            html = open(self.HTML_ROOT + file_name+'.html')
             return html.read()
         except IOError, e:
             print('Read View File Error.', e)
@@ -45,11 +58,21 @@ class Viewer(object):
             ret += '''<a href="#"><img class="img-thumbnail save-img" img-id="%s" src="%s/img/%s"></a>''' % (img['id'], self.DOCUMENT_ROOT, img['FileName'])
         return ret
         
-    def set_redirect(self, url, time=0):
-        print '<meta http-equiv="refresh" content="%d;url=http://%s/yagra/src/%s">' % (time, self.HOST_NAME, url)
+    def output(self, json_resp=None):
+        print self.header
+        if self.cookie != None:
+            print self.cookie.output()
+        print '\n'
+        if json_resp != None:
+            print json.dumps(json_resp)
+        else:
+            for view in self.views:
+                self.load(view, self.params)
 
 if __name__ == '__main__':
     params = {'site_url' : '/cgi-bin/yagra', 'reg' : '注册'}
     viewer = Viewer()
-    viewer.load('header', params)
+    viewer.add_view('header', params)
+    viewer.add_view('index', params)
+    viewer.output()
     

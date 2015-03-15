@@ -2,11 +2,12 @@
 # coding=utf-8
 
 import cgi
-import json
 
+import viewer
 import dbconnector
 from hashutil import HashUtil
 
+viewer = viewer.Viewer()
 form = cgi.FieldStorage()
 username = form.getfirst('user_name')
 
@@ -19,12 +20,9 @@ try:
     db.execute(sql, sql_params)
     response['token'] = token
 except Exception, e:
-    raise e
     resonse['code'] = -1
+    raise e
 finally:
     db.close()
 
-header = 'Content-Type: text/html; charset=utf-8'    
-print(header)
-print '\n'
-print json.dumps(response)
+viewer.output(response)

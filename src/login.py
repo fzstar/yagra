@@ -5,7 +5,6 @@ import cgi
 import os
 import sys
 import Cookie
-import json
 
 from hashutil import HashUtil
 import viewer
@@ -16,12 +15,10 @@ cgitb.enable()
 
 SESSION_KEY = config.SESSION_KEY
 DOCUMENT_ROOT = config.DOCUMENT_ROOT
-header = 'Content-Type: text/html; charset=utf-8'
 viewer = viewer.Viewer()
 cookie = Cookie.SimpleCookie()
 response = dict()
-    
-print(header)
+
 res = 0;
 params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg', \
           'login' : '登录', 'login_url' : 'login', 'welcome' : '你好',\
@@ -50,18 +47,15 @@ else:
                 cookie['session'] = rows[0]['SessionId']  
                 cookie['session']['expires'] = 30 * 60
                 cookie['user_name'] = username
-                cookie['user_id'] = rows[0]['id']           
-    except Exception, e:
-        print(e)
+                cookie['user_id'] = rows[0]['id']
     finally:
         db.close()
-    
 
-print cookie
-print '\n'
+viewer.set_cookie(cookie)
 response['code'] = res
 if res == 1:
-    viewer.load('header', params)
-    viewer.load('login', params)
+    viewer.add_view('header', params)
+    viewer.add_view('login', params)
+    viewer.output()
 else:
-    print json.dumps(response)
+    viewer.output(response)
