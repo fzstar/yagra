@@ -12,10 +12,10 @@ form = cgi.FieldStorage()
 username = form.getfirst('user_name')
 
 db = dbconnector.DbConnector()
-response = {'code' : 0, 'token' : ''}
+response = {'code': 0, 'token': ''}
 try:
     token = HashUtil.get_random_token()
-    sql = 'update users set LoginToken = %s where UserName = %s';
+    sql = 'update users set LoginToken = %s where UserName = %s'
     sql_params = [token, username]
     db.execute(sql, sql_params)
     response['token'] = token

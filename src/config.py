@@ -13,4 +13,5 @@ DOCUMENT_ROOT = ''
 APP_ROOT = '/var/www/yagra/'
 HOST_NAME = '123.1.189.113'
 
-MAX_IMAGE_SIZE = 1 * 1024 * 1024 # 1 MB
+MAX_IMAGE_SIZE = 1 * 1024 * 1024    #1 MB
+

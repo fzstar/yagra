@@ -21,9 +21,9 @@ cookie = Cookie.SimpleCookie()
 response = dict()
 
 res = 0
-params = {'site_url' : DOCUMENT_ROOT, 'reg' : '注册', 'reg_url' : 'reg', \
-          'login' : '登录', 'login_url' : 'login', 'welcome' : '你好',\
-          'img_path' : 'default.jpg'}
+params = {'site_url': DOCUMENT_ROOT, 'reg': '注册', 'reg_url': 'reg',
+          'login': '登录', 'login_url': 'login', 'welcome': '你好',
+          'img_path': 'default.jpg'}
 
 if ('REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'GET'):
     res = 1
@@ -35,13 +35,13 @@ else:
     if passwd != confirm_passwd:
         res = -2
         response['msg'] = '两次输入的密码不一致'
-    else:    
+    else:
         db = dbconnector.DbConnector()
         try:
             if (db.count("select count(*) from users where UserName=%s", [username]) > 0):
                 res = -3
                 response['msg'] = '用户名已存在'
-            else:    
+            else:
                 sql = "insert into users(UserName,Password,SessionId,Token) values (%s,%s,%s,%s)"
                 sid = HashUtil.get_session_id(username)
                 token = HashUtil.get_md5(username)
@@ -51,7 +51,6 @@ else:
                 cookie['session']['expires'] = 30 * 60
                 cookie['user_name'] = username
                 cookie['user_id'] = user_id
-                
         except Exception as e:
             print("error", e)
         finally:
@@ -65,4 +64,3 @@ if res == 1:
     viewer.output()
 else:
     viewer.output(response)
-
