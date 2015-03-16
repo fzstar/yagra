@@ -4,6 +4,7 @@
 import os
 import Cookie
 
+
 def get_session(db):
     if 'HTTP_COOKIE' in os.environ:
         cookie = Cookie.SimpleCookie(os.environ['HTTP_COOKIE'])
